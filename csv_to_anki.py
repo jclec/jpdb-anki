@@ -36,7 +36,7 @@ def main(
     save_dir: str,
 ) -> None:
     MODEL_ID = 1656946912  # hard-coded "random" id
-    DECK_ID = 1676571463
+    deck_id = 1676571463
 
     model = genanki.Model(
         MODEL_ID,
@@ -67,8 +67,8 @@ def main(
     # create decks for each batch
     decks = []
     for batch in batches:
-        deck = genanki.Deck(DECK_ID, "Word/Reading")
-        DECK_ID += 1
+        deck = genanki.Deck(deck_id, "Word/Reading")
+        deck_id += 1
         for row in batch:
             note = genanki.Note(model=model, fields=[row[word], row[reading]])
             deck.add_note(note)
@@ -134,7 +134,7 @@ if __name__ == "__main__":
         help="path to output file (default 'output.apkg')",
     )
     parser.add_argument(
-        "-D",
+        "-O",
         "--output_dir",
         type=str,
         nargs="?",
