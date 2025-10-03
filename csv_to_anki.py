@@ -31,12 +31,12 @@ def main(
     word: str,
     reading: str,
     delimiter: str,
+    batch_size: int,
     save_path: str,
     save_dir: str,
 ) -> None:
     MODEL_ID = 1656946912  # hard-coded "random" id
     DECK_ID = 1676571463
-    BATCH_SIZE = 10000
 
     model = genanki.Model(
         MODEL_ID,
@@ -54,13 +54,12 @@ def main(
         ],
     )
 
-
     # read csv and batch into batch_size rows each
     batches = []
     with open(filename, "r", encoding="utf-8") as file:
         reader = csv.DictReader(file, delimiter=delimiter)
         while True:
-            batch = list(islice(reader, BATCH_SIZE))
+            batch = list(islice(reader, batch_size))
             if not batch:
                 break
             batches.append(batch)
@@ -120,6 +119,13 @@ if __name__ == "__main__":
         help="csv delimiter (default ','). for ease of use, you can enter 'tab' or '\\t' for tab delimiter",
     )
     parser.add_argument(
+        "-b",
+        "--batch-size",
+        type=int,
+        default="10000",
+        help="max batch size per anki deck (default 10000). input 0 to save everything into a single deck",
+    )
+    parser.add_argument(
         "-o",
         "--output_file",
         type=str,
@@ -151,9 +157,26 @@ if __name__ == "__main__":
     word_column = args.word
     reading_column = args.reading
     delim = "\t" if args.delimiter in ("tab", "\\t") else args.delimiter
+    batchsize = sys.maxsize if args.batch_size == 0 else args.batch_size
     output_file = args.output_file
     output_dir = args.output_dir
     if debug:
-        print(input_file, delim.encode(), output_file)
+        print(
+            input_file,
+            word_column,
+            reading_column,
+            delim and delim.encode(),
+            batchsize,
+            output_file,
+            output_dir,
+        )
 
-    main(input_file, word_column, reading_column, delim, output_file, output_dir)
+    main(
+        input_file,
+        word_column,
+        reading_column,
+        delim,
+        batchsize,
+        output_file,
+        output_dir,
+    )
