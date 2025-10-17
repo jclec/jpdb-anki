@@ -13,7 +13,7 @@ for (let item of vocabList) {
 	// select ellipsis (...) dropdown menu for card
 	let dropdown = item.children[1].children[0].children[0]
 		.children[0].children[1].children[0].children;
-	// select "Remove", always at bottom of dropdown
+	// click "Remove", always at bottom of dropdown
 	dropdown[dropdown.length - 1].children[0].children[3].click();
 }
 ```
